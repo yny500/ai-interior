@@ -1,29 +1,38 @@
 'use client'
 
 import { useState } from 'react'
+import ResultCard from './ResultCard'
 
 export default function InputForm() {
   const [input, setInput] = useState('')
+  const [result, setResult] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = () => {
-    console.log(input)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    setLoading(true)
+    
+    setTimeout(() => {
+      setResult(`${input} 스타일은 미니멀하고 따뜻한 느낌입니다.`)
+      setLoading(false)
+    }, 1000)
   }
-
-  return (
-    <div className="flex flex-col gap-4 max-w-md">
-      <textarea
-        className="border p-2"
-        placeholder="원하는 인테리어 스타일을 입력하세요 (예: 원룸, 따뜻한 느낌, 우드톤)"
+  
+  return(
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input 
         value={input}
         onChange={(e) => setInput(e.target.value)}
-      />
+        placeholder='원하는 인테리어 스타일 입력'
+        />
+        <button type="submit">추천받기</button>
+      </form>
 
-      <button
-        className="bg-black text-white p-2"
-        onClick={handleSubmit}
-      >
-        추천 받기
-      </button>
+      {loading && <p>추천 생성 중 ...</p>}
+
+      {!loading && result && <ResultCard result={result} />}
     </div>
   )
 }
