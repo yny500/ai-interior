@@ -5,18 +5,31 @@ import ResultCard from './ResultCard'
 
 export default function InputForm() {
   const [input, setInput] = useState('')
-  const [result, setResult] = useState('')
+  const [result, setResult] = useState<{
+    text: string
+    keywords: string[]
+  } | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     setLoading(true)
+
+    const res = await fetch('/api/interior', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ input }),
+    })
+
+    const data = await res.json()
     
-    setTimeout(() => {
-      setResult(`${input} 스타일은 미니멀하고 따뜻한 느낌입니다.`)
-      setLoading(false)
-    }, 1000)
+    setResult({
+      text: data.result,
+      keywords: data.keywords,
+    })
+    setLoading(false)
   }
   
   return(
@@ -25,7 +38,7 @@ export default function InputForm() {
         <input 
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder='원하는 인테리어 스타일 입력'
+        placeholder='우드톤, 미니멀 등 입력'
         />
         <button type="submit">추천받기</button>
       </form>
