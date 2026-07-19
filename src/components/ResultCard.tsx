@@ -1,8 +1,7 @@
+import { InterirorResult } from "@/types/interior"
+
 type Props = {
-  result: {
-    text: string
-    keywords: string[]
-  }
+  result: InterirorResult
 }   
 
 export default function ResultCard({ result }: Props) {
