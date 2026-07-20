@@ -1,64 +1,55 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import ResultCard from './ResultCard'
-import type { InterirorApiResponse, InterirorResult } from "@/types/interior"
-
+import { useState } from "react";
+import ResultCard from "./ResultCard";
+import type { InterirorResult } from "@/types/interior";
+import interiorApi from "@/lib/interior";
 
 export default function InputForm() {
-  const [input, setInput] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [result, setResult] = useState<InterirorResult | null>(null) 
-  const [loading, setLoading] = useState(false)
+  const [input, setInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<InterirorResult | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault() 
+    e.preventDefault();
 
-    if((!input.trim())) {
-      setError('원하는 인테리어 스타일을 입력해주세요') 
-      return
+    if (!input.trim()) {
+      setError("원하는 인테리어 스타일을 입력해주세요");
+      return;
     }
-    setLoading(true)
+    setLoading(true);
     setError(null);
 
+    // API 요청 함수 별도 분리
     try {
-    const res = await fetch('/api/interior', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ input }),
-    })
+      const data = await interiorApi(input);
 
-    if (!res.ok) {
-      throw new Error('추천 생성에 실패했습니다.');
-    }
-
-    const data:InterirorApiResponse = await res.json()
-    
-    setResult({
-      text: data.result,
-      keywords: data.keywords,
-    })
+      setResult({
+        text: data.result,
+        keywords: data.keywords,
+      });
     } catch (error) {
       setError(
-        error instanceof Error ? error.message : '추천 생성 중 오류가 발생했습니다.'
-      )
+        error instanceof Error
+          ? error.message
+          : "추천 생성 중 오류가 발생했습니다.",
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  
-  return(
+  };
+
+  return (
     <div>
       <form onSubmit={handleSubmit}>
-        <input 
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder='우드톤, 미니멀 등 입력'
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="우드톤, 미니멀 등 입력"
         />
         <button type="submit" disabled={loading}>
-          {loading ? '추천 생성 중...' : '추천받기'}
+          {loading ? "추천 생성 중..." : "추천받기"}
         </button>
       </form>
 
@@ -66,5 +57,5 @@ export default function InputForm() {
 
       {!loading && result && <ResultCard result={result} />}
     </div>
-  )
+  );
 }
