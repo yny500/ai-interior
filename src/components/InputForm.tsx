@@ -24,11 +24,7 @@ export default function InputForm() {
     // API 요청 함수 별도 분리
     try {
       const data = await interiorApi(input);
-
-      setResult({
-        text: data.result,
-        keywords: data.keywords,
-      });
+      setResult(data);
     } catch (error) {
       setError(
         error instanceof Error
@@ -52,9 +48,7 @@ export default function InputForm() {
           {loading ? "추천 생성 중..." : "추천받기"}
         </button>
       </form>
-
       {error && <p>{error}</p>}
-
       {!loading && result && <ResultCard result={result} />}
     </div>
   );

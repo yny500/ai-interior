@@ -1,4 +1,4 @@
-import type { InterirorApiResponse } from "@/types/interior";
+import type { InterirorResult } from "@/types/interior";
 
 export default async function interiorApi(input: string) {
   const res = await fetch("/api/interior", {
@@ -13,6 +13,6 @@ export default async function interiorApi(input: string) {
     throw new Error("추천 생성에 실패했습니다.");
   }
 
-  const data: InterirorApiResponse = await res.json();
+  const data: InterirorResult = await res.json();
   return data;
 }
