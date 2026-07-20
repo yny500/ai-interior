@@ -20,11 +20,16 @@ export default function InputForm() {
     }
     setLoading(true);
     setError(null);
+    setResult(null);
 
-    // API 요청 함수 별도 분리
     try {
       const data = await interiorApi(input);
-      setResult(data);
+
+      if (data) {
+        setResult(data);
+      } else {
+        setError("추천 결과가 없습니다. 다른 스타일을 입력해주세요.");
+      }
     } catch (error) {
       setError(
         error instanceof Error
@@ -49,7 +54,7 @@ export default function InputForm() {
         </button>
       </form>
       {error && <p>{error}</p>}
-      {!loading && result && <ResultCard result={result} />}
+      {!loading && result && <ResultCard result={result} input={input} />}
     </div>
   );
 }

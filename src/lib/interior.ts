@@ -14,5 +14,8 @@ export default async function interiorApi(input: string) {
   }
 
   const data: InterirorResult = await res.json();
-  return data;
+  const nomalizedInput = input.trim();
+  const finalData = data.keywords.includes(nomalizedInput) ? data : null;
+
+  return finalData;
 }
