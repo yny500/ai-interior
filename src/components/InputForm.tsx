@@ -7,6 +7,7 @@ import interiorApi from "@/lib/interior";
 
 export default function InputForm() {
   const [input, setInput] = useState("");
+  const [submittedInput, setSubmittedInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<InterirorResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -25,7 +26,8 @@ export default function InputForm() {
     try {
       const data = await interiorApi(input);
 
-      if (data) {
+      if (data.keywords) {
+        setSubmittedInput(input);
         setResult(data);
       } else {
         setError("추천 결과가 없습니다. 다른 스타일을 입력해주세요.");
@@ -54,7 +56,7 @@ export default function InputForm() {
         </button>
       </form>
       {error && <p>{error}</p>}
-      {!loading && result && <ResultCard result={result} input={input} />}
+      {!loading && result && <ResultCard result={result} />}
     </div>
   );
 }

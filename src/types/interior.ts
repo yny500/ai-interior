@@ -1,3 +1,4 @@
 export type InterirorResult = {
-  keywords: string[];
+  text: string | null;
+  keywords: string | null;
 };

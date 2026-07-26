@@ -13,11 +13,7 @@ export default async function interiorApi(input: string) {
     throw new Error("추천 생성에 실패했습니다.");
   }
 
-  const data: InterirorResult = await res.json();
-  const nomalizedInput = input.trim();
-  const isMatched = data.keywords.some((keyword) => {
-    return keyword.includes(nomalizedInput) || nomalizedInput.includes(keyword);
-  });
+  const data: InterirorResult | null = await res.json();
 
-  return isMatched ? data : null;
+  return data;
 }
