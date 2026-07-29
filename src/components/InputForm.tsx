@@ -2,45 +2,15 @@
 
 import { useState } from "react";
 import ResultCard from "./ResultCard";
-import type { InterirorResult } from "@/types/interior";
-import interiorApi from "@/lib/interior";
+import { useInterior } from "@/hooks/useInterior";
 
 export default function InputForm() {
   const [input, setInput] = useState("");
-  const [submittedInput, setSubmittedInput] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<InterirorResult | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { result, loading, error, getRecommendation } = useInterior();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!input.trim()) {
-      setError("원하는 인테리어 스타일을 입력해주세요");
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    setResult(null);
-
-    try {
-      const data = await interiorApi(input);
-
-      if (data.keywords) {
-        setSubmittedInput(input);
-        setResult(data);
-      } else {
-        setError("추천 결과가 없습니다. 다른 스타일을 입력해주세요.");
-      }
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "추천 생성 중 오류가 발생했습니다.",
-      );
-    } finally {
-      setLoading(false);
-    }
+    await getRecommendation(input);
   };
 
   return (
